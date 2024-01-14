@@ -1,3 +1,5 @@
+#Given a binary tree, determine if it is height-balanced.
+
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
