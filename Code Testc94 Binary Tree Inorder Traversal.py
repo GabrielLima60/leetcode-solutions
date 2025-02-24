@@ -1,0 +1,23 @@
+'''
+Given the root of a binary tree, return the inorder traversal of its nodes' values.
+'''
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        inorder = []
+        self.aux(root, inorder)
+        return inorder
+    
+    def aux(self, root, inorder):
+        
+        if root is None:
+            return 
+        self.aux(root.left, inorder)
+        inorder.append(root.val)
+        self.aux(root.right, inorder)
