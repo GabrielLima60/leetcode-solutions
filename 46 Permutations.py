@@ -6,14 +6,18 @@ permutations.
 
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        result = []
-        self.generate_permutations([], nums, result)
-        return result
+        self.nums = nums
+        self.result = []
+        self.path = []
+        self.backtrack()
+        return self.result
 
-    def generate_permutations(self, basis, nums, result):
-
-        if nums == []:
-            result.append(basis)
-        else:
-            for number in nums:
-                self.generate_permutations(basis + [number], [n for n in nums if n != number], result)
+    def backtrack(self):
+        for number in self.nums:
+            if number not in self.path:
+                self.path.append(number)
+                if len(self.path) == len(self.nums):
+                    self.result.append(self.path[:])
+                else:
+                    self.backtrack()
+                self.path.pop()
