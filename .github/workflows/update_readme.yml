@@ -1,0 +1,38 @@
+name: Update README and Repository Description with File Count
+
+on:
+  push:
+    branches:
+      - main  # Runs when you push to the main branch
+  schedule:
+    - cron: "0 0 * * *"  # Runs daily at midnight
+
+jobs:
+  update-repo-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Count files
+        run: echo "FILE_COUNT=$(find . -type f | wc -l)" >> $GITHUB_ENV
+
+      - name: Update README
+        run: |
+          sed -i "/<!-- FILE_COUNT -->/c\Total files: $FILE_COUNT" README.md
+
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@github.com"
+          git add README.md
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update file count in README"
+          git push
+
+      - name: Update repository description
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          FILE_COUNT: ${{ env.FILE_COUNT }}
+        run: |
+          gh api -X PATCH /repos/$REPO -f description="these are my solutions to numerous leetcode problems \nTotal files: $FILE_COUNT"
